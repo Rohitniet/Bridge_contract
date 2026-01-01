@@ -48,8 +48,106 @@ contract CounterTest is Test {
 
         assertEq(p.balance(user),1000);
 
+        vm.expectEmit(true,true,true,false);
+       emit lock1.depositevent(user,address(l1),500);
+
         l1.deposit(500);
         assertEq(l1.total_amount(),500);
+        assertEq(l1.people_deposit(address(user)),500);
+
+    }
+
+    function testl2() public {
+
+         vm.startPrank(user);
+        p.mint(user,1000);
+
+      p.approve(address(l1), 500);
+
+        assertEq(p.balance(user),1000);
+
+        vm.expectEmit(true,true,true,false);
+       emit lock1.depositevent(user,address(l1),500);
+
+        l1.deposit(500);
+        assertEq(l1.total_amount(),500);
+        assertEq(l1.people_deposit(address(user)),500);
+        vm.stopPrank();
+
+        vm.prank(relay);
+        l2.locked_otherside(user,500);
+
+        vm.startPrank(user);
+
+        assertEq(l2.token_address2(),address(t));
+
+        assertEq(l2.people_pending(user),500);
+
+        l2.withdraw(250);
+
+        assertEq(t.balance(user),250);
+
+
+
+    }
+
+
+    function testburn()public{
+            vm.startPrank(user);
+        p.mint(user,1000);
+
+      p.approve(address(l1), 500);
+
+        assertEq(p.balance(user),1000);
+
+        vm.expectEmit(true,true,true,false);
+       emit lock1.depositevent(user,address(l1),500);
+
+        l1.deposit(500);
+        assertEq(l1.total_amount(),500);
+        assertEq(l1.people_deposit(address(user)),500);
+        vm.stopPrank();
+
+        vm.prank(relay);
+        l2.locked_otherside(user,500);
+
+        vm.startPrank(user);
+
+        assertEq(l2.token_address2(),address(t));
+
+        assertEq(l2.people_pending(user),500);
+
+        l2.withdraw(250);
+
+        assertEq(t.balance(user),250);
+
+        vm.startPrank(address(user));
+        t.approve(address(l2),125);
+
+       vm.expectEmit(true,true,false,false);
+        emit lock2.burn_event(user,125);
+        l2.burntoken(125);
+
+        vm.stopPrank();
+
+        vm.prank(relay);
+        l1.burn_on_otherside(user,125);
+
+        vm.startPrank(user);
+
+        assertEq(l1.people_pending(user),125);
+        assertEq(p.balance(user),500);
+
+        l1.withdraw(125);
+
+         assertEq(p.balance(user),625);
+
+
+
+
+
+
+
 
     }
 }

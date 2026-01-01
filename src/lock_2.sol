@@ -12,10 +12,10 @@ interface token2{
 
 contract lock2{
 
-    address token_address2;
+    address public  token_address2;
 
     uint256 total_amount;
-    mapping(address=>uint256)people_pending;
+    mapping(address=>uint256) public people_pending;
 
     event burn_event(address indexed id, uint256 indexed amount );
 

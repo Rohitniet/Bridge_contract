@@ -6,13 +6,13 @@ import {IERC20} from "node_modules/@openzeppelin/contracts/token/ERC20/IERC20.so
 
 contract lock1 {
 
-    event depositevent(address indexed from, address indexed to, uint256 indexed amount);
+      event  depositevent(address indexed from, address indexed to, uint256 indexed amount) ;
 
     address token_address;
     uint256 public total_amount;
 
-    mapping(address=>uint256) people_deposit;
-    mapping(address=>uint256) people_pending;
+    mapping(address=>uint256) public people_deposit;
+    mapping(address=>uint256) public people_pending;
 
 
     constructor(address tokid){
