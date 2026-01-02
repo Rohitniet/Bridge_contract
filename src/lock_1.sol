@@ -9,15 +9,17 @@ contract lock1 {
       event  depositevent(address indexed from, address indexed to, uint256 indexed amount) ;
 
     address token_address;
+    address relayer_address;
     uint256 public total_amount;
 
     mapping(address=>uint256) public people_deposit;
     mapping(address=>uint256) public people_pending;
 
 
-    constructor(address tokid){
+    constructor(address tokid,address relayer_id){
 
         token_address =tokid;
+        relayer_address=relayer_id;
 
 
     }
@@ -54,6 +56,7 @@ contract lock1 {
     }
 
     function burn_on_otherside(address id, uint256 amount) public{
+        require(msg.sender==relayer_address,"unautorised caller not a registered relayer");
 
         people_pending[id] +=amount;
         

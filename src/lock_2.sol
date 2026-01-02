@@ -13,14 +13,16 @@ interface token2{
 contract lock2{
 
     address public  token_address2;
+    address relayer_address;
 
     uint256 total_amount;
     mapping(address=>uint256) public people_pending;
 
     event burn_event(address indexed id, uint256 indexed amount );
 
-    constructor(address tokenid){
+    constructor(address tokenid ,address relayer_id){
         token_address2=tokenid;
+        relayer_address=relayer_id;
     }
 
 
@@ -55,6 +57,7 @@ contract lock2{
 
     
     function locked_otherside(address id,uint256 amount)public {
+        require(msg.sender==relayer_address,"unautorised caller not a registered relayer");
 
         people_pending[id] +=amount;
        
